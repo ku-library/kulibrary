@@ -6,47 +6,99 @@
 <title>Ask LibBee — KU Library AI</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐝</text></svg>">
 <style>
-:root{--ku-gold:#C8A951;--ku-blue:#003366;--bg:#F0F4F8;--text:#1a1a2e;--border:#d1d5db}
+:root{--ku-gold:#C8A951;--ku-blue:#003366;--bg:#F0F4F8;--text:#1a1a2e;--border:#d1d5db;--shadow:0 2px 8px rgba(0,51,102,.08)}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,sans-serif}
-body{background:var(--bg);color:var(--text);height:100dvh;display:flex;flex-direction:column}
-header{background:var(--ku-blue);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:12px}
-header h1{font-size:1.1rem}
-header p{font-size:.75rem;opacity:.9}
-.model-toggle{margin-left:auto;display:flex;gap:4px;background:rgba(255,255,255,.1);padding:4px;border-radius:20px}
-.model-toggle button{padding:6px 12px;border:none;border-radius:16px;cursor:pointer;font-size:.75rem;font-weight:600}
-.model-toggle button.active-gpt{background:#10A37F;color:#fff}
-.model-toggle button.active-claude{background:#D97706;color:#fff}
+body{background:var(--bg);color:var(--text);height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+header{background:var(--ku-blue);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,51,102,.4)}
+header h1{font-size:1.1rem}header p{font-size:.75rem;opacity:.9}
+.model-toggle{display:flex;gap:4px;background:rgba(255,255,255,.12);padding:4px;border-radius:20px}
+.model-toggle button{padding:6px 12px;border:none;border-radius:16px;cursor:pointer;font-size:.75rem;font-weight:600;transition:all .2s}
+.model-toggle button.active-gpt{background:#10A37F;color:#fff;box-shadow:0 2px 8px rgba(16,163,127,.3)}
+.model-toggle button.active-claude{background:#D97706;color:#fff;box-shadow:0 2px 8px rgba(217,119,6,.3)}
 .model-toggle button:not(.active){background:transparent;color:rgba(255,255,255,.7)}
 .tabs{display:flex;background:#fff;border-bottom:2px solid var(--border);overflow-x:auto}
-.tab{padding:12px 16px;font-size:.8rem;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;color:#6b7280;white-space:nowrap}
+.tab{padding:12px 16px;font-size:.82rem;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;color:#6b7280;white-space:nowrap;transition:all .2s}
 .tab.active{color:var(--ku-blue);border-bottom-color:var(--ku-gold)}
 .panel{display:none;flex:1;flex-direction:column;overflow:hidden}
 .panel.active{display:flex}
 .chat-area{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
-.message{display:flex;gap:8px;max-width:85%;animation:fadeIn .3s}
+.message{display:flex;gap:10px;max-width:90%;animation:fadeIn .3s ease}
 .message.user{align-self:flex-end;flex-direction:row-reverse}
-.avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:#fff;box-shadow:var(--shadow)}
 .message.bot .avatar{background:var(--ku-blue);color:#fff}
 .message.user .avatar{background:var(--ku-gold);color:var(--ku-blue)}
-.bubble{padding:12px 16px;border-radius:16px;font-size:.9rem;line-height:1.5;max-width:600px}
-.message.bot .bubble{background:#fff;border:1px solid var(--border);border-top-left-radius:4px}
+.bubble{padding:12px 16px;border-radius:16px;font-size:.9rem;line-height:1.6;max-width:600px;word-wrap:break-word}
+.message.bot .bubble{background:#fff;border:1px solid var(--border);border-top-left-radius:4px;box-shadow:var(--shadow)}
 .message.user .bubble{background:var(--ku-blue);color:#fff;border-top-right-radius:4px}
-.typing{display:flex;gap:4px;padding:8px 0}
+.chips{display:flex;gap:8px;padding:12px 16px;flex-wrap:wrap;background:#fff;border-top:1px solid var(--border)}
+.chip{padding:6px 14px;border:1.5px solid var(--ku-blue);color:var(--ku-blue);border-radius:20px;font-size:.78rem;cursor:pointer;background:#fff;transition:all .2s;font-weight:500}
+.chip:hover{background:var(--ku-blue);color:#fff}
+.input-area{padding:12px 16px;background:#fff;border-top:1px solid var(--border);display:flex;gap:8px}
+.input-area input{flex:1;padding:12px 16px;border:2px solid var(--border);border-radius:24px;outline:none;font-size:.9rem}
+.input-area input:focus{border-color:var(--ku-blue)}
+.input-area button{padding:12px 24px;background:var(--ku-blue);color:#fff;border:none;border-radius:24px;cursor:pointer;font-weight:600;transition:background .2s}
+.input-area button:hover{background:#004488}
+.typing{display:flex;gap:4px;padding:8px 0;align-items:center}
 .typing span{width:8px;height:8px;background:var(--ku-gold);border-radius:50%;animation:bounce 1.4s infinite}
 .typing span:nth-child(2){animation-delay:.2s}
 .typing span:nth-child(3){animation-delay:.4s}
 @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-10px)}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.input-area{padding:12px;background:#fff;border-top:1px solid var(--border);display:flex;gap:8px}
-.input-area input{flex:1;padding:10px 14px;border:2px solid var(--border);border-radius:24px;outline:none;font-size:.9rem}
-.input-area input:focus{border-color:var(--ku-blue)}
-.input-area button{padding:10px 20px;background:var(--ku-blue);color:#fff;border:none;border-radius:24px;cursor:pointer;font-weight:600}
-.chips{display:flex;gap:8px;padding:12px;flex-wrap:wrap;background:#fff}
-.chip{padding:6px 14px;border:1.5px solid var(--ku-blue);color:var(--ku-blue);border-radius:20px;font-size:.75rem;cursor:pointer;background:#fff;transition:all .2s}
-.chip:hover{background:var(--ku-blue);color:#fff}
-.skeleton{background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:loading 1.5s infinite;height:60px;border-radius:8px;margin:8px 0}
-@keyframes loading{0%{background-position:200% 0}100%{background-position:-200% 0}}
-.error-banner{background:#fee2e2;border-left:4px solid #dc2626;color:#991b1b;padding:12px;margin:8px;border-radius:8px}
+
+/* Search Panel Styles */
+.sarea{padding:20px;overflow-y:auto;flex:1;max-width:900px;margin:0 auto;width:100%}
+.nl-box{background:#fff;border-radius:12px;padding:20px;border:1px solid var(--border);margin-bottom:16px}
+.nl-row{display:flex;gap:8px;margin-bottom:12px}
+.nl-row input{flex:1;padding:12px 16px;border:2px solid var(--border);border-radius:8px;outline:none;font-size:.9rem}
+.nl-row input:focus{border-color:var(--ku-blue)}
+.go{padding:12px 24px;background:var(--ku-blue);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600}
+.tog-row{display:flex;gap:15px;flex-wrap:wrap;margin-top:12px;align-items:center;font-size:.85rem;color:#6b7280}
+.tog{display:flex;align-items:center;gap:6px;cursor:pointer}
+.tog input{accent-color:var(--ku-blue);width:16px;height:16px}
+.yr{width:70px;padding:8px;border:1.5px solid var(--border);border-radius:8px;text-align:center;font-size:.85rem}
+
+/* Search Results & AI Tools */
+.scard{background:#fff;border-radius:12px;padding:16px;border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:16px}
+.scard-title{font-weight:700;font-size:.95rem;color:var(--ku-blue);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.bool-str{font-family:monospace;background:#1a1a2e;color:var(--ku-gold);padding:10px 14px;border-radius:8px;font-size:.85rem;margin:10px 0;word-break:break-all;overflow-x:auto}
+.slinks{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.slink{display:flex;align-items:center;gap:6px;padding:10px 16px;border-radius:10px;text-decoration:none;font-size:.85rem;font-weight:600;transition:all .2s}
+.slink:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.slink.all{background:var(--ku-blue);color:#fff}
+.slink.art{background:#fef3c7;color:#92400e;border:1px solid #fde68a}
+.slink.bk{background:#ede9fe;color:#5b21b6;border:1px solid #ddd6fe}
+.slink.ai{background:linear-gradient(135deg,var(--ku-gold),#f59e0b);color:#fff}
+
+.ai-panel{margin-top:16px;padding:16px;background:linear-gradient(135deg,#f0f4ff,#faf5ff);border-radius:12px;border:1px solid #c4b5fd}
+.ai-panel-title{font-size:.85rem;font-weight:700;color:#5b21b6;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.ai-row-label{font-size:.75rem;font-weight:600;color:#6b7280;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.ai-tools-strip{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.ai-tool-chip{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border-radius:20px;text-decoration:none;font-size:.75rem;font-weight:600;transition:all .2s;border:1.5px solid transparent}
+.ai-tool-chip:hover{transform:translateY(-2px);box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.ai-tool-chip .tc-icon{font-size:.9rem}
+.ai-tool-chip.leapspace{background:#fff7ed;color:#9a3412;border-color:#fed7aa}
+.ai-tool-chip.scopus{background:#eff6ff;color:#1e40af;border-color:#bfdbfe}
+.ai-tool-chip.ebscoai{background:#fce7f3;color:#9d174d;border-color:#f9a8d4}
+.ai-tool-chip.primoai{background:linear-gradient(135deg,#fef9c3,#ede9fe);color:#5b21b6;border-color:#c4b5fd}
+.ai-tool-chip.consensus{background:#fdf4ff;color:#86198f;border-color:#f0abfc}
+.ai-tool-chip.scispace{background:#ecfdf5;color:#065f46;border-color:#6ee7b7}
+.ai-tool-chip.perplexity{background:#f5f3ff;color:#4c1d95;border-color:#ddd6fe}
+.ai-tool-chip.openalex{background:#f0f9ff;color:#0c4a6e;border-color:#bae6fd}
+
+.did-you-mean{background:#fef9c3;border-left:4px solid var(--ku-gold);padding:12px 16px;margin-bottom:16px;border-radius:0 8px 8px 0;font-size:.9rem;color:#713f12}
+
+/* Result Cards */
+.rcard{background:#fff;border-radius:10px;padding:16px;border:1px solid var(--border);margin-bottom:12px;transition:all .2s}
+.rcard:hover{box-shadow:0 4px 12px rgba(0,51,102,.12)}
+.rcard-title{font-size:.9rem;font-weight:700;color:var(--ku-blue);margin-bottom:6px;line-height:1.3}
+.rcard-title a{color:var(--ku-blue);text-decoration:none}
+.rcard-title a:hover{text-decoration:underline}
+.rcard-meta{font-size:.8rem;color:#6b7280;margin-bottom:4px}
+.rcard-actions{margin-top:12px;display:flex;gap:8px}
+.rcard-btn{padding:6px 12px;border:1px solid var(--border);background:#fff;color:var(--ku-blue);border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:600;transition:all .2s}
+.rcard-btn:hover{background:var(--ku-blue);color:#fff}
+
+.sstatus{font-size:.9rem;color:#6b7280;padding:8px 0}
 </style>
 </head>
 <body>
@@ -68,12 +120,13 @@ header p{font-size:.75rem;opacity:.9}
   <div class="tab" onclick="switchTab('services')">🏛️ Services</div>
 </div>
 
+<!-- Chat Panel -->
 <div id="panel-chat" class="panel active">
   <div class="chips" id="chips">
-    <div class="chip" onclick="send('Find articles on AI')">Find Articles</div>
-    <div class="chip" onclick="send('Library hours')">Library Hours</div>
-    <div class="chip" onclick="send('Contact medical librarian')">Medical Librarian</div>
-    <div class="chip" onclick="send('How do I get full text?')">Full Text Help</div>
+    <div class="chip" onclick="send('Find articles on AI')">📚 Find Articles</div>
+    <div class="chip" onclick="send('Library hours')">⏰ Hours</div>
+    <div class="chip" onclick="send('Contact medical librarian')">🏥 Medical Librarian</div>
+    <div class="chip" onclick="send('How do I get full text?')">📄 Full Text</div>
   </div>
   <div class="chat-area" id="chatArea">
     <div class="message bot">
@@ -91,58 +144,69 @@ header p{font-size:.75rem;opacity:.9}
   </div>
 </div>
 
+<!-- Search Panel with AI Tools -->
 <div id="panel-search" class="panel">
-  <div style="padding:20px;max-width:800px;margin:0 auto">
-    <h2 style="color:var(--ku-blue);margin-bottom:16px">🔍 AI Search</h2>
-    <p style="color:#6b7280;margin-bottom:16px">Search articles, books, and databases</p>
-    <input type="text" id="searchInput" placeholder="Enter search terms..." style="width:100%;padding:12px;border:2px solid var(--border);border-radius:8px;margin-bottom:12px">
-    <div style="display:flex;gap:8px;margin-bottom:16px">
-      <label style="display:flex;align-items:center;gap:4px;cursor:pointer">
-        <input type="checkbox" id="peerReviewed"> Peer Reviewed
-      </label>
-      <label style="display:flex;align-items:center;gap:4px;cursor:pointer">
-        <input type="checkbox" id="openAccess"> Open Access
-      </label>
+  <div class="sarea">
+    <div class="nl-box">
+      <div style="font-weight:700;color:var(--ku-blue);margin-bottom:12px;font-size:1.05rem">🔍 Smart Search — AI builds query, PRIMO returns real results</div>
+      <div class="nl-row">
+        <input type="text" id="searchInput" placeholder='e.g. "AI in education from 2022 peer reviewed"' onkeydown="if(event.key==='Enter')doSearch()">
+        <button class="go" onclick="doSearch()">Search</button>
+      </div>
+      <div class="tog-row">
+        <label class="tog"><input type="checkbox" id="peerReviewed"> 🔬 Peer Reviewed</label>
+        <label class="tog"><input type="checkbox" id="openAccess"> 🔓 Open Access</label>
+        <span>📅 Year:</span>
+        <input class="yr" type="text" id="yearFrom" placeholder="From">
+        <span>—</span>
+        <input class="yr" type="text" id="yearTo" placeholder="To">
+      </div>
     </div>
-    <button onclick="doSearch()" style="padding:10px 24px;background:var(--ku-blue);color:#fff;border:none;border-radius:8px;cursor:pointer">Search</button>
-    <div id="searchResults" style="margin-top:20px"></div>
+    
+    <div id="searchStatus" class="sstatus"></div>
+    <div id="searchResults"></div>
   </div>
 </div>
 
+<!-- Guides Panel -->
 <div id="panel-guides" class="panel">
-  <div style="padding:20px">
-    <h2 style="color:var(--ku-blue);margin-bottom:16px">📚 Research Guides</h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px">
-      <a href="https://library.ku.ac.ae/gds/" target="_blank" style="padding:16px;background:#fff;border-radius:8px;text-decoration:none;color:inherit;border:1px solid var(--border)">
-        <h3 style="color:var(--ku-blue);margin-bottom:8px">Subject Guides</h3>
-        <p style="font-size:.9rem;color:#6b7280">Expert guides curated by KU librarians</p>
+  <div style="padding:24px;max-width:1000px;margin:0 auto">
+    <h2 style="color:var(--ku-blue);margin-bottom:20px">📚 Research Guides</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">
+      <a href="https://library.ku.ac.ae/gds/" target="_blank" style="padding:20px;background:#fff;border-radius:12px;text-decoration:none;color:inherit;border:1px solid var(--border);transition:all .2s">
+        <div style="font-size:1.5rem;margin-bottom:8px">📖</div>
+        <h3 style="color:var(--ku-blue);margin-bottom:4px">Subject Guides</h3>
+        <p style="font-size:.85rem;color:#6b7280">Expert guides curated by KU librarians</p>
       </a>
-      <a href="https://library.ku.ac.ae/oa/" target="_blank" style="padding:16px;background:#fff;border-radius:8px;text-decoration:none;color:inherit;border:1px solid var(--border)">
-        <h3 style="color:var(--ku-blue);margin-bottom:8px">Open Access</h3>
-        <p style="font-size:.9rem;color:#6b7280">OA publishing support and APC funding</p>
+      <a href="https://library.ku.ac.ae/oa/" target="_blank" style="padding:20px;background:#fff;border-radius:12px;text-decoration:none;color:inherit;border:1px solid var(--border)">
+        <div style="font-size:1.5rem;margin-bottom:8px">🔓</div>
+        <h3 style="color:var(--ku-blue);margin-bottom:4px">Open Access</h3>
+        <p style="font-size:.85rem;color:#6b7280">OA publishing support and APC funding</p>
       </a>
-      <a href="https://library.ku.ac.ae/orcid" target="_blank" style="padding:16px;background:#fff;border-radius:8px;text-decoration:none;color:inherit;border:1px solid var(--border)">
-        <h3 style="color:var(--ku-blue);margin-bottom:8px">ORCID & Impact</h3>
-        <p style="font-size:.9rem;color:#6b7280">Researcher profiles and metrics</p>
+      <a href="https://library.ku.ac.ae/orcid" target="_blank" style="padding:20px;background:#fff;border-radius:12px;text-decoration:none;color:inherit;border:1px solid var(--border)">
+        <div style="font-size:1.5rem;margin-bottom:8px">🆔</div>
+        <h3 style="color:var(--ku-blue);margin-bottom:4px">ORCID & Impact</h3>
+        <p style="font-size:.85rem;color:#6b7280">Researcher profiles and metrics</p>
       </a>
     </div>
   </div>
 </div>
 
+<!-- Services Panel -->
 <div id="panel-services" class="panel">
-  <div style="padding:20px">
-    <h2 style="color:var(--ku-blue);margin-bottom:16px">🏛️ Library Services</h2>
-    <div style="display:grid;gap:12px">
-      <a href="https://khalifa.primo.exlibrisgroup.com/discovery/account?vid=971KUOSTAR_INST:KU" target="_blank" style="padding:16px;background:#fff;border-radius:8px;text-decoration:none;color:inherit;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
-        <span>👤 My Library Account</span>
+  <div style="padding:24px;max-width:800px;margin:0 auto">
+    <h2 style="color:var(--ku-blue);margin-bottom:20px">🏛️ Library Services</h2>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <a href="https://khalifa.primo.exlibrisgroup.com/discovery/account?vid=971KUOSTAR_INST:KU" target="_blank" style="padding:16px;background:#fff;border-radius:10px;text-decoration:none;color:inherit;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow)">
+        <span style="font-weight:600">👤 My Library Account</span>
         <span>→</span>
       </a>
-      <a href="https://library.ku.ac.ae/ill/" target="_blank" style="padding:16px;background:#fff;border-radius:8px;text-decoration:none;color:inherit;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
-        <span>📬 Interlibrary Loan (ILL)</span>
+      <a href="https://library.ku.ac.ae/ill/" target="_blank" style="padding:16px;background:#fff;border-radius:10px;text-decoration:none;color:inherit;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow)">
+        <span style="font-weight:600">📬 Interlibrary Loan (ILL)</span>
         <span>→</span>
       </a>
-      <a href="https://library.ku.ac.ae/AskUs" target="_blank" style="padding:16px;background:#fff;border-radius:8px;text-decoration:none;color:inherit;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
-        <span>💬 Ask a Librarian</span>
+      <a href="https://library.ku.ac.ae/AskUs" target="_blank" style="padding:16px;background:#fff;border-radius:10px;text-decoration:none;color:inherit;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow)">
+        <span style="font-weight:600">💬 Ask a Librarian</span>
         <span>→</span>
       </a>
     </div>
@@ -150,26 +214,31 @@ header p{font-size:.75rem;opacity:.9}
 </div>
 
 <script>
-// API Configuration - UPDATE THESE
-const API_URL = 'https://nikeshn-libbee.hf.space';  // Your new HF Space
-const WORKER_URL = 'https://steep-haze-e1f8.nikeshn.workers.dev'; // Your Cloudflare worker
-
+// Configuration
+const API_URL = 'https://nikeshn-libbee.hf.space';
 let currentModel = 'gpt';
 let chatHistory = [];
+let lastSearchPlan = null;
 
 function setModel(model) {
   currentModel = model;
   document.getElementById('btnGPT').className = model === 'gpt' ? 'active-gpt' : '';
   document.getElementById('btnClaude').className = model === 'claude' ? 'active-claude' : '';
+  if(model === 'claude') {
+    document.getElementById('btnGPT').classList.remove('active-gpt');
+  } else {
+    document.getElementById('btnClaude').classList.remove('active-claude');
+  }
 }
 
 function switchTab(tab) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelector(`.tab:nth-child(${['chat','search','guides','services'].indexOf(tab)+1})`).classList.add('active');
+  event.target.classList.add('active');
   document.getElementById(`panel-${tab}`).classList.add('active');
 }
 
+// Chat Functions
 function addMessage(role, content) {
   const chatArea = document.getElementById('chatArea');
   const msg = document.createElement('div');
@@ -196,25 +265,23 @@ function showTyping() {
 }
 
 function hideTyping() {
-  const typing = document.getElementById('typing-indicator');
-  if (typing) typing.remove();
+  const t = document.getElementById('typing-indicator');
+  if(t) t.remove();
 }
 
 async function send(text = null) {
   const input = document.getElementById('userInput');
   const question = text || input.value.trim();
-  if (!question) return;
+  if(!question) return;
   
-  if (!text) input.value = '';
-  
+  if(!text) input.value = '';
   addMessage('user', question);
   showTyping();
   
-  // Add to history
   chatHistory.push({role: 'user', content: question});
   
   try {
-    const response = await fetch(`${API_URL}/agent`, {
+    const res = await fetch(`${API_URL}/agent`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
@@ -225,82 +292,277 @@ async function send(text = null) {
     });
     
     hideTyping();
+    const data = await res.json();
     
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-    
-    const data = await response.json();
-    
-    // Add assistant response to history
     chatHistory.push({role: 'assistant', content: data.answer});
-    if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
+    if(chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
     
     addMessage('bot', data.answer);
     
-  } catch (error) {
+  } catch(e) {
     hideTyping();
-    addMessage('bot', `<div class="error-banner">Error: ${error.message}. Please try again.</div>`);
+    addMessage('bot', `<div style="color:#dc2626">Error: ${e.message}</div>`);
   }
+}
+
+// ===== SEARCH & AI TOOLS FUNCTIONS (From your original index98.html) =====
+
+function _makeBoolean(text) {
+  const stopRE = /^(of|on|in|the|a|an|and|or|for|to|with|by|from|at|is|are|was|were|be|been|being|have|has|had|do|does|did|will|would|could|should|may|its|this|that|these|those|about|impact|effect|role|influence|importance|use|application|study|analysis|review|what|how|why|when|where|which)$/i;
+  const words = text.split(/\s+/);
+  const concepts = [];
+  let phrase = [];
+  
+  for(const w of words) {
+    const clean = w.replace(/['"]/g, '');
+    if(!stopRE.test(clean) && clean.length > 2) {
+      phrase.push(clean);
+    } else {
+      if(phrase.length > 0) { concepts.push(phrase.join(' ')); phrase = []; }
+    }
+  }
+  if(phrase.length > 0) concepts.push(phrase.join(' '));
+  
+  if(concepts.length >= 2) return concepts.map(c => `"${c}"`).join(' AND ');
+  if(concepts.length === 1) return `"${concepts[0]}"`;
+  return `"${text}"`;
+}
+
+function _sanitizeBooleanForPrimo(boolean) {
+  if(!boolean) return boolean;
+  boolean = boolean.replace(/'/g, '"');
+  boolean = boolean.replace(/\(\s*(?:19|20)\d{2}\s*(?:OR\s*(?:19|20)\d{2}\s*)*\)/g, '');
+  boolean = boolean.replace(/^\s*(AND|OR)\s*/i, '');
+  boolean = boolean.replace(/\s*(AND|OR)\s*$/i, '');
+  boolean = boolean.replace(/\s+/g, ' ').trim();
+  return boolean;
+}
+
+async function buildSearchPlan(query) {
+  const raw = query.trim();
+  
+  // Try to use backend /correct endpoint if available, otherwise local
+  try {
+    const res = await fetch(`${API_URL}/correct`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({query: raw, year: new Date().getFullYear()})
+    });
+    
+    if(res.ok) {
+      const data = await res.json();
+      return {
+        corrected: data.corrected || raw,
+        natural: data.natural || data.corrected || raw,
+        boolean: data.boolean || _makeBoolean(data.corrected || raw),
+        database_query: data.database_query || data.boolean || raw,
+        year_from: data.year_from || '',
+        year_to: data.year_to || '',
+        peer_reviewed: data.peer_reviewed || false,
+        open_access: data.open_access || false
+      };
+    }
+  } catch(e) {
+    console.log('Backend /correct not available, using local');
+  }
+  
+  // Local fallback
+  const fallbackBoolean = _makeBoolean(raw);
+  return {
+    corrected: raw,
+    natural: raw,
+    boolean: fallbackBoolean,
+    database_query: fallbackBoolean.replace(/[()"]/g,'').replace(/\b(AND|OR)\b/g,' ').trim(),
+    year_from: '',
+    year_to: '',
+    peer_reviewed: false,
+    open_access: false
+  };
+}
+
+function encodeQuery(str) {
+  return encodeURIComponent(str).replace(/%20/g, '+');
+}
+
+function buildSearchCard(bool, natural, corrected, raw, yf, yt, pr, oa) {
+  const yr = (yf||yt) ? `&multiFacets=facet_searchcreationdate,include,${yf||'0001'}|,|${yt||'9999'}` : '';
+  const facets = `${pr?'&qInclude=facet_tlevel,exact,peer_reviewed':''}${oa?'&qInclude=facet_tlevel,exact,open_access':''}${yr}`;
+  
+  const boolClean = _sanitizeBooleanForPrimo(bool);
+  const simpleQ = boolClean.replace(/[()"]/g,'').replace(/\b(AND|OR)\b/g,' ').trim();
+  
+  const urlAll = `https://khalifa.primo.exlibrisgroup.com/discovery/search?query=any,contains,${encodeQuery(simpleQ)}&tab=Everything&search_scope=MyInst_and_CI&vid=971KUOSTAR_INST:KU&lang=en&mode=advanced&offset=0${facets}`;
+  const urlArt = `https://khalifa.primo.exlibrisgroup.com/discovery/search?query=any,contains,${encodeQuery(simpleQ)}&tab=CentralIndex&search_scope=CentralIndex&vid=971KUOSTAR_INST:KU&lang=en&mode=advanced&offset=0${facets}&qInclude=facet_rtype,exact,articles`;
+  
+  return `
+    <div class="scard">
+      <div class="scard-title">🔍 Search Strategy ${corrected !== raw ? '<span style="color:#d97706;font-size:.8rem">(Corrected)</span>' : ''}</div>
+      ${corrected !== raw ? `<div class="did-you-mean">✏️ <strong>Did you mean:</strong> "${corrected}" instead of "${raw}"?</div>` : ''}
+      <div style="font-size:.85rem;color:#6b7280;margin-bottom:8px"><strong>Natural query:</strong> ${natural}</div>
+      <div class="bool-str">${bool}</div>
+      <div class="slinks">
+        <a class="slink all" href="${urlAll}" target="_blank">📚 All Resources</a>
+        <a class="slink art" href="${urlArt}" target="_blank">📄 Articles Only</a>
+      </div>
+    </div>
+  `;
+}
+
+function buildAIToolsPanel(naturalQuery, primoKeyword) {
+  const nq = encodeURIComponent(naturalQuery);
+  const pk = encodeURIComponent(primoKeyword);
+  const oaQ = naturalQuery.trim().replace(/\s+/g, '+');
+  
+  const ebscoUrl = `https://khalifa.idm.oclc.org/login?url=http://search.ebscohost.com/login.aspx?authtype=ip,uid&profile=eds&direct=true&bquery=${nq}`;
+  
+  return `
+    <div class="ai-panel">
+      <div class="ai-panel-title">✨ Also Try These AI Research Tools</div>
+      
+      <div class="ai-row-label">🔐 KU Subscribed</div>
+      <div class="ai-tools-strip" style="margin-bottom:14px">
+        <a class="ai-tool-chip leapspace" href="https://www.sciencedirect.com/leapspace?query=${nq}" target="_blank">
+          <span class="tc-icon">🔬</span>LeapSpace
+        </a>
+        <a class="ai-tool-chip scopus" href="https://www-scopus-com.khalifa.idm.oclc.org/pages/ai?query=${nq}" target="_blank">
+          <span class="tc-icon">🔭</span>Scopus AI
+        </a>
+        <a class="ai-tool-chip ebscoai" href="${ebscoUrl}" target="_blank">
+          <span class="tc-icon">📰</span>EBSCO AI
+        </a>
+        <a class="ai-tool-chip primoai" href="https://khalifa.primo.exlibrisgroup.com/discovery/researchAssistant?vid=971KUOSTAR_INST:KU&query=${pk}" target="_blank">
+          <span class="tc-icon">⭐</span>PRIMO AI
+        </a>
+      </div>
+      
+      <div class="ai-row-label">🆓 Freemium</div>
+      <div class="ai-tools-strip">
+        <a class="ai-tool-chip consensus" href="https://consensus.app/results/?q=${nq}" target="_blank">
+          <span class="tc-icon">🧬</span>Consensus
+        </a>
+        <a class="ai-tool-chip scispace" href="https://scispace.com/search?q=${nq}" target="_blank">
+          <span class="tc-icon">🧪</span>SciSpace
+        </a>
+        <a class="ai-tool-chip perplexity" href="https://www.perplexity.ai/search?q=${nq}" target="_blank">
+          <span class="tc-icon">🔎</span>Perplexity
+        </a>
+        <a class="ai-tool-chip openalex" href="https://openalex.org/works?page=1&sort=relevance_score:desc&search.semantic=${oaQ}" target="_blank">
+          <span class="tc-icon">🌐</span>OpenAlex
+        </a>
+      </div>
+    </div>
+  `;
 }
 
 async function doSearch() {
   const query = document.getElementById('searchInput').value.trim();
-  if (!query) return;
+  if(!query) return;
   
+  const pr = document.getElementById('peerReviewed').checked;
+  const oa = document.getElementById('openAccess').checked;
+  const yf = document.getElementById('yearFrom').value;
+  const yt = document.getElementById('yearTo').value;
+  
+  const statusDiv = document.getElementById('searchStatus');
   const resultsDiv = document.getElementById('searchResults');
-  resultsDiv.innerHTML = '<div class="skeleton"></div><div class="skeleton"></div>';
+  
+  statusDiv.innerHTML = '<span style="color:#d97706">✏️ Correcting spelling & building Boolean query...</span>';
+  resultsDiv.innerHTML = '';
   
   try {
-    const response = await fetch(`${API_URL}/search`, {
+    // Build search plan
+    const plan = await buildSearchPlan(query);
+    lastSearchPlan = plan;
+    
+    // Update UI with search strategy
+    const wasCorrected = plan.corrected.toLowerCase().trim() !== query.toLowerCase().trim();
+    if(wasCorrected) {
+      document.getElementById('searchInput').value = plan.corrected;
+    }
+    
+    statusDiv.innerHTML = `<span style="color:#16a34a">🔍 Searching PRIMO...</span>`;
+    
+    // Execute PRIMO search
+    const searchRes = await fetch(`${API_URL}/search`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        query: query,
+        query: plan.database_query || plan.boolean,
         source: 'primo',
-        limit: 5,
-        peer_reviewed: document.getElementById('peerReviewed').checked,
-        open_access: document.getElementById('openAccess').checked
+        limit: 10,
+        peer_reviewed: pr,
+        open_access: oa,
+        year_from: yf || plan.year_from,
+        year_to: yt || plan.year_to
       })
     });
     
-    const data = await response.json();
+    const data = await searchRes.json();
     
-    if (data.error) {
-      resultsDiv.innerHTML = `<div class="error-banner">Error: ${data.error}</div>`;
-      return;
-    }
+    // Build results HTML
+    let html = '';
     
-    let html = `<p style="margin-bottom:12px;color:#6b7280">Found ${data.total || 0} results</p>`;
+    // Search strategy card
+    html += buildSearchCard(
+      plan.boolean, 
+      plan.natural, 
+      plan.corrected, 
+      query, 
+      yf||plan.year_from, 
+      yt||plan.year_to, 
+      pr, 
+      oa
+    );
     
-    if (data.results && data.results.length > 0) {
-      html += '<div style="display:flex;flex-direction:column;gap:12px">';
-      data.results.forEach(item => {
+    // AI Tools panel
+    html += buildAIToolsPanel(plan.natural, plan.boolean.replace(/[()"]/g,'').replace(/\b(AND|OR)\b/g,' ').trim());
+    
+    // Results
+    if(data.results && data.results.length > 0) {
+      html += `<div style="margin:16px 0 8px;font-weight:700;color:var(--ku-blue);font-size:1rem">📄 ${data.total || 'Many'} results found — showing top ${data.results.length}:</div>`;
+      
+      data.results.forEach((r, i) => {
         html += `
-          <div style="padding:16px;background:#fff;border-radius:8px;border:1px solid var(--border)">
-            <h3 style="color:var(--ku-blue);font-size:1rem;margin-bottom:8px">${item.title}</h3>
-            <p style="font-size:.85rem;color:#6b7280;margin-bottom:4px">${item.creator || 'Unknown author'}</p>
-            <p style="font-size:.85rem;color:#6b7280">${item.date || ''} ${item.source ? '• ' + item.source : ''}</p>
-            ${item.primo_url ? `<a href="${item.primo_url}" target="_blank" style="display:inline-block;margin-top:8px;color:var(--ku-blue);font-size:.85rem">View in PRIMO →</a>` : ''}
+          <div class="rcard">
+            <div class="rcard-title"><a href="${r.primo_url || '#'}" target="_blank">${r.title}</a></div>
+            <div class="rcard-meta">${r.creator || 'Unknown author'} • ${r.date || ''} • ${r.type || 'Unknown type'}</div>
+            ${r.source ? `<div class="rcard-meta">${r.source}</div>` : ''}
+            <div class="rcard-actions">
+              <button class="rcard-btn" onclick="window.open('${r.primo_url || '#'}', '_blank')">View in PRIMO →</button>
+            </div>
           </div>
         `;
       });
-      html += '</div>';
+      
+      // View all link
+      const boolClean = _sanitizeBooleanForPrimo(plan.boolean);
+      const simpleQ = boolClean.replace(/[()"]/g,'').replace(/\b(AND|OR)\b/g,' ').trim();
+      const facets = `${pr?'&qInclude=facet_tlevel,exact,peer_reviewed':''}${oa?'&qInclude=facet_tlevel,exact,open_access':''}`;
+      const viewAllUrl = `https://khalifa.primo.exlibrisgroup.com/discovery/search?query=any,contains,${encodeQuery(simpleQ)}&tab=Everything&search_scope=MyInst_and_CI&vid=971KUOSTAR_INST:KU&lang=en&mode=advanced&offset=0${facets}`;
+      
+      html += `
+        <div style="text-align:center;margin-top:16px">
+          <a href="${viewAllUrl}" target="_blank" style="display:inline-block;padding:10px 20px;background:var(--ku-blue);color:#fff;text-decoration:none;border-radius:8px;font-weight:600">
+            View all results in PRIMO →
+          </a>
+        </div>
+      `;
     } else {
-      html += '<p>No results found.</p>';
+      html += `<div style="padding:20px;background:#fef2f2;border:1px solid #fee2e2;border-radius:8px;color:#991b1b;margin-top:12px">No results found. Try broadening your search terms.</div>`;
     }
     
+    statusDiv.innerHTML = '';
     resultsDiv.innerHTML = html;
     
-  } catch (error) {
-    resultsDiv.innerHTML = `<div class="error-banner">Search failed: ${error.message}</div>`;
+  } catch(e) {
+    statusDiv.innerHTML = '';
+    resultsDiv.innerHTML = `<div class="error-banner">Search failed: ${e.message}</div>`;
   }
 }
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('LibBee frontend loaded');
-  console.log('API URL:', API_URL);
+  console.log('LibBee loaded — API:', API_URL);
 });
 </script>
 </body>
