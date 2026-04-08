@@ -15,7 +15,7 @@ header h1{font-size:1.1rem}header p{font-size:.75rem;opacity:.9}
 .model-toggle button{padding:6px 12px;border:none;border-radius:16px;cursor:pointer;font-size:.75rem;font-weight:600;transition:all .2s}
 .model-toggle button.active-gpt{background:#10A37F;color:#fff;box-shadow:0 2px 8px rgba(16,163,127,.3)}
 .model-toggle button.active-claude{background:#D97706;color:#fff;box-shadow:0 2px 8px rgba(217,119,6,.3)}
-.model-toggle button:not(.active){background:transparent;color:rgba(255,255,255,.7)}
+.model-toggle button:not([class]){background:transparent;color:rgba(255,255,255,.7)}
 .tabs{display:flex;background:#fff;border-bottom:2px solid var(--border);overflow-x:auto}
 .tab{padding:12px 16px;font-size:.82rem;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;color:#6b7280;white-space:nowrap;transition:all .2s}
 .tab.active{color:var(--ku-blue);border-bottom-color:var(--ku-gold)}
@@ -33,11 +33,13 @@ header h1{font-size:1.1rem}header p{font-size:.75rem;opacity:.9}
 .chips{display:flex;gap:8px;padding:12px 16px;flex-wrap:wrap;background:#fff;border-top:1px solid var(--border)}
 .chip{padding:6px 14px;border:1.5px solid var(--ku-blue);color:var(--ku-blue);border-radius:20px;font-size:.78rem;cursor:pointer;background:#fff;transition:all .2s;font-weight:500}
 .chip:hover{background:var(--ku-blue);color:#fff}
-.input-area{padding:12px 16px;background:#fff;border-top:1px solid var(--border);display:flex;gap:8px}
+/* FIX: sticky input area so keyboard doesn't hide it on mobile */
+.input-area{padding:12px 16px;background:#fff;border-top:1px solid var(--border);display:flex;gap:8px;position:sticky;bottom:0;z-index:10}
 .input-area input{flex:1;padding:12px 16px;border:2px solid var(--border);border-radius:24px;outline:none;font-size:.9rem}
 .input-area input:focus{border-color:var(--ku-blue)}
 .input-area button{padding:12px 24px;background:var(--ku-blue);color:#fff;border:none;border-radius:24px;cursor:pointer;font-weight:600;transition:background .2s}
 .input-area button:hover{background:#004488}
+.input-area button:disabled{background:#9ca3af;cursor:not-allowed}
 .typing{display:flex;gap:4px;padding:8px 0;align-items:center}
 .typing span{width:8px;height:8px;background:var(--ku-gold);border-radius:50%;animation:bounce 1.4s infinite}
 .typing span:nth-child(2){animation-delay:.2s}
@@ -45,19 +47,18 @@ header h1{font-size:1.1rem}header p{font-size:.75rem;opacity:.9}
 @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-10px)}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
-/* Search Panel Styles */
+/* Search Panel */
 .sarea{padding:20px;overflow-y:auto;flex:1;max-width:900px;margin:0 auto;width:100%}
 .nl-box{background:#fff;border-radius:12px;padding:20px;border:1px solid var(--border);margin-bottom:16px}
 .nl-row{display:flex;gap:8px;margin-bottom:12px}
 .nl-row input{flex:1;padding:12px 16px;border:2px solid var(--border);border-radius:8px;outline:none;font-size:.9rem}
 .nl-row input:focus{border-color:var(--ku-blue)}
 .go{padding:12px 24px;background:var(--ku-blue);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600}
+.go:disabled{background:#9ca3af;cursor:not-allowed}
 .tog-row{display:flex;gap:15px;flex-wrap:wrap;margin-top:12px;align-items:center;font-size:.85rem;color:#6b7280}
 .tog{display:flex;align-items:center;gap:6px;cursor:pointer}
 .tog input{accent-color:var(--ku-blue);width:16px;height:16px}
 .yr{width:70px;padding:8px;border:1.5px solid var(--border);border-radius:8px;text-align:center;font-size:.85rem}
-
-/* Search Results & AI Tools */
 .scard{background:#fff;border-radius:12px;padding:16px;border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:16px}
 .scard-title{font-weight:700;font-size:.95rem;color:var(--ku-blue);margin-bottom:8px;display:flex;align-items:center;gap:8px}
 .bool-str{font-family:monospace;background:#1a1a2e;color:var(--ku-gold);padding:10px 14px;border-radius:8px;font-size:.85rem;margin:10px 0;word-break:break-all;overflow-x:auto}
@@ -66,9 +67,7 @@ header h1{font-size:1.1rem}header p{font-size:.75rem;opacity:.9}
 .slink:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.15)}
 .slink.all{background:var(--ku-blue);color:#fff}
 .slink.art{background:#fef3c7;color:#92400e;border:1px solid #fde68a}
-.slink.bk{background:#ede9fe;color:#5b21b6;border:1px solid #ddd6fe}
-.slink.ai{background:linear-gradient(135deg,var(--ku-gold),#f59e0b);color:#fff}
-
+.did-you-mean{background:#fef9c3;border-left:4px solid var(--ku-gold);padding:12px 16px;margin-bottom:16px;border-radius:0 8px 8px 0;font-size:.9rem;color:#713f12}
 .ai-panel{margin-top:16px;padding:16px;background:linear-gradient(135deg,#f0f4ff,#faf5ff);border-radius:12px;border:1px solid #c4b5fd}
 .ai-panel-title{font-size:.85rem;font-weight:700;color:#5b21b6;margin-bottom:10px;display:flex;align-items:center;gap:6px}
 .ai-row-label{font-size:.75rem;font-weight:600;color:#6b7280;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
@@ -84,10 +83,6 @@ header h1{font-size:1.1rem}header p{font-size:.75rem;opacity:.9}
 .ai-tool-chip.scispace{background:#ecfdf5;color:#065f46;border-color:#6ee7b7}
 .ai-tool-chip.perplexity{background:#f5f3ff;color:#4c1d95;border-color:#ddd6fe}
 .ai-tool-chip.openalex{background:#f0f9ff;color:#0c4a6e;border-color:#bae6fd}
-
-.did-you-mean{background:#fef9c3;border-left:4px solid var(--ku-gold);padding:12px 16px;margin-bottom:16px;border-radius:0 8px 8px 0;font-size:.9rem;color:#713f12}
-
-/* Result Cards */
 .rcard{background:#fff;border-radius:10px;padding:16px;border:1px solid var(--border);margin-bottom:12px;transition:all .2s}
 .rcard:hover{box-shadow:0 4px 12px rgba(0,51,102,.12)}
 .rcard-title{font-size:.9rem;font-weight:700;color:var(--ku-blue);margin-bottom:6px;line-height:1.3}
@@ -97,8 +92,9 @@ header h1{font-size:1.1rem}header p{font-size:.75rem;opacity:.9}
 .rcard-actions{margin-top:12px;display:flex;gap:8px}
 .rcard-btn{padding:6px 12px;border:1px solid var(--border);background:#fff;color:var(--ku-blue);border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:600;transition:all .2s}
 .rcard-btn:hover{background:var(--ku-blue);color:#fff}
-
 .sstatus{font-size:.9rem;color:#6b7280;padding:8px 0}
+.error-banner{padding:16px;background:#fef2f2;border:1px solid #fee2e2;border-radius:8px;color:#991b1b;margin-top:12px}
+.wake-banner{padding:12px 16px;background:#fef9c3;border:1px solid #fde68a;border-radius:8px;color:#713f12;font-size:.85rem;text-align:center;margin-bottom:8px}
 </style>
 </head>
 <body>
@@ -107,6 +103,7 @@ header h1{font-size:1.1rem}header p{font-size:.75rem;opacity:.9}
     <h1>🐝 LibBee</h1>
     <p>Khalifa University Library AI</p>
   </div>
+  <!-- FIX: simplified model toggle state management -->
   <div class="model-toggle">
     <button id="btnClaude" onclick="setModel('claude')">Claude</button>
     <button id="btnGPT" class="active-gpt" onclick="setModel('gpt')">ChatGPT</button>
@@ -114,15 +111,16 @@ header h1{font-size:1.1rem}header p{font-size:.75rem;opacity:.9}
 </header>
 
 <div class="tabs">
-  <div class="tab active" onclick="switchTab('chat')">💬 Ask LibBee</div>
-  <div class="tab" onclick="switchTab('search')">🔍 AI Search</div>
-  <div class="tab" onclick="switchTab('guides')">📚 Guides</div>
-  <div class="tab" onclick="switchTab('services')">🏛️ Services</div>
+  <!-- FIX: pass `this` to switchTab instead of relying on implicit global `event` -->
+  <div class="tab active" onclick="switchTab('chat', this)">💬 Ask LibBee</div>
+  <div class="tab" onclick="switchTab('search', this)">🔍 AI Search</div>
+  <div class="tab" onclick="switchTab('guides', this)">📚 Guides</div>
+  <div class="tab" onclick="switchTab('services', this)">🏛️ Services</div>
 </div>
 
 <!-- Chat Panel -->
 <div id="panel-chat" class="panel active">
-  <div class="chips" id="chips">
+  <div class="chips">
     <div class="chip" onclick="send('Find articles on AI')">📚 Find Articles</div>
     <div class="chip" onclick="send('Library hours')">⏰ Hours</div>
     <div class="chip" onclick="send('Contact medical librarian')">🏥 Medical Librarian</div>
@@ -133,25 +131,30 @@ header h1{font-size:1.1rem}header p{font-size:.75rem;opacity:.9}
       <div class="avatar">🐝</div>
       <div class="bubble">
         Hello! I'm <strong>LibBee</strong>, the Khalifa University Library AI Assistant.<br><br>
-        I can help you find articles and books, search databases, access full text, 
+        I can help you find articles and books, search databases, access full text,
         and answer library questions. What would you like help with?
       </div>
     </div>
   </div>
   <div class="input-area">
-    <input type="text" id="userInput" placeholder="Ask me anything..." onkeypress="if(event.key==='Enter')send()">
-    <button onclick="send()">Send</button>
+    <input type="text" id="userInput" placeholder="Ask me anything..."
+      onkeypress="if(event.key==='Enter' && !event.repeat) send()">
+    <button id="sendBtn" onclick="send()">Send</button>
   </div>
 </div>
 
-<!-- Search Panel with AI Tools -->
+<!-- Search Panel -->
 <div id="panel-search" class="panel">
   <div class="sarea">
     <div class="nl-box">
-      <div style="font-weight:700;color:var(--ku-blue);margin-bottom:12px;font-size:1.05rem">🔍 Smart Search — AI builds query, PRIMO returns real results</div>
+      <div style="font-weight:700;color:var(--ku-blue);margin-bottom:12px;font-size:1.05rem">
+        🔍 Smart Search — AI builds query, PRIMO returns real results
+      </div>
       <div class="nl-row">
-        <input type="text" id="searchInput" placeholder='e.g. "AI in education from 2022 peer reviewed"' onkeydown="if(event.key==='Enter')doSearch()">
-        <button class="go" onclick="doSearch()">Search</button>
+        <input type="text" id="searchInput"
+          placeholder='e.g. "AI in education from 2022 peer reviewed"'
+          onkeydown="if(event.key==='Enter') doSearch()">
+        <button class="go" id="searchBtn" onclick="doSearch()">Search</button>
       </div>
       <div class="tog-row">
         <label class="tog"><input type="checkbox" id="peerReviewed"> 🔬 Peer Reviewed</label>
@@ -162,7 +165,6 @@ header h1{font-size:1.1rem}header p{font-size:.75rem;opacity:.9}
         <input class="yr" type="text" id="yearTo" placeholder="To">
       </div>
     </div>
-    
     <div id="searchStatus" class="sstatus"></div>
     <div id="searchResults"></div>
   </div>
@@ -185,7 +187,7 @@ header h1{font-size:1.1rem}header p{font-size:.75rem;opacity:.9}
       </a>
       <a href="https://library.ku.ac.ae/orcid" target="_blank" style="padding:20px;background:#fff;border-radius:12px;text-decoration:none;color:inherit;border:1px solid var(--border)">
         <div style="font-size:1.5rem;margin-bottom:8px">🆔</div>
-        <h3 style="color:var(--ku-blue);margin-bottom:4px">ORCID & Impact</h3>
+        <h3 style="color:var(--ku-blue);margin-bottom:4px">ORCID &amp; Impact</h3>
         <p style="font-size:.85rem;color:#6b7280">Researcher profiles and metrics</p>
       </a>
     </div>
@@ -197,56 +199,103 @@ header h1{font-size:1.1rem}header p{font-size:.75rem;opacity:.9}
   <div style="padding:24px;max-width:800px;margin:0 auto">
     <h2 style="color:var(--ku-blue);margin-bottom:20px">🏛️ Library Services</h2>
     <div style="display:flex;flex-direction:column;gap:12px">
-      <a href="https://khalifa.primo.exlibrisgroup.com/discovery/account?vid=971KUOSTAR_INST:KU" target="_blank" style="padding:16px;background:#fff;border-radius:10px;text-decoration:none;color:inherit;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow)">
-        <span style="font-weight:600">👤 My Library Account</span>
-        <span>→</span>
+      <a href="https://khalifa.primo.exlibrisgroup.com/discovery/account?vid=971KUOSTAR_INST:KU" target="_blank"
+        style="padding:16px;background:#fff;border-radius:10px;text-decoration:none;color:inherit;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow)">
+        <span style="font-weight:600">👤 My Library Account</span><span>→</span>
       </a>
-      <a href="https://library.ku.ac.ae/ill/" target="_blank" style="padding:16px;background:#fff;border-radius:10px;text-decoration:none;color:inherit;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow)">
-        <span style="font-weight:600">📬 Interlibrary Loan (ILL)</span>
-        <span>→</span>
+      <a href="https://library.ku.ac.ae/ill/" target="_blank"
+        style="padding:16px;background:#fff;border-radius:10px;text-decoration:none;color:inherit;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow)">
+        <span style="font-weight:600">📬 Interlibrary Loan (ILL)</span><span>→</span>
       </a>
-      <a href="https://library.ku.ac.ae/AskUs" target="_blank" style="padding:16px;background:#fff;border-radius:10px;text-decoration:none;color:inherit;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow)">
-        <span style="font-weight:600">💬 Ask a Librarian</span>
-        <span>→</span>
+      <a href="https://library.ku.ac.ae/AskUs" target="_blank"
+        style="padding:16px;background:#fff;border-radius:10px;text-decoration:none;color:inherit;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow)">
+        <span style="font-weight:600">💬 Ask a Librarian</span><span>→</span>
+      </a>
+      <a href="https://library.ku.ac.ae/rooms/" target="_blank"
+        style="padding:16px;background:#fff;border-radius:10px;text-decoration:none;color:inherit;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow)">
+        <span style="font-weight:600">🚪 Book a Study Room</span><span>→</span>
+      </a>
+      <a href="https://library.ku.ac.ae/hours" target="_blank"
+        style="padding:16px;background:#fff;border-radius:10px;text-decoration:none;color:inherit;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow)">
+        <span style="font-weight:600">⏰ Library Hours</span><span>→</span>
       </a>
     </div>
   </div>
 </div>
 
 <script>
-// Configuration
+// ── Config ────────────────────────────────────────────────────────────────────
 const API_URL = 'https://nikeshn-libbee.hf.space';
+const FETCH_TIMEOUT_MS = 35000; // 35s — accounts for HF cold start
+
 let currentModel = 'gpt';
 let chatHistory = [];
+let isSending = false;
 let lastSearchPlan = null;
 
+// ── Utility ───────────────────────────────────────────────────────────────────
+
+// FIX: strip HTML from bot answers before storing in history sent to LLM
+function stripHtml(html) {
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  return tmp.textContent || tmp.innerText || '';
+}
+
+// FIX: fetch with AbortController timeout for HF cold-start handling
+async function fetchWithTimeout(url, options, timeoutMs = FETCH_TIMEOUT_MS) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { ...options, signal: controller.signal });
+    return res;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+// ── Model Toggle ──────────────────────────────────────────────────────────────
+
+// FIX: simplified — removed redundant second block
 function setModel(model) {
   currentModel = model;
   document.getElementById('btnGPT').className = model === 'gpt' ? 'active-gpt' : '';
   document.getElementById('btnClaude').className = model === 'claude' ? 'active-claude' : '';
-  if(model === 'claude') {
-    document.getElementById('btnGPT').classList.remove('active-gpt');
-  } else {
-    document.getElementById('btnClaude').classList.remove('active-claude');
-  }
 }
 
-function switchTab(tab) {
+// ── Tab Switching ─────────────────────────────────────────────────────────────
+
+// FIX: accept `el` parameter instead of relying on implicit global `event`
+function switchTab(tab, el) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  event.target.classList.add('active');
+  el.classList.add('active');
   document.getElementById(`panel-${tab}`).classList.add('active');
 }
 
-// Chat Functions
+// ── Chat ──────────────────────────────────────────────────────────────────────
+
+// FIX: separated bot (innerHTML trusted) from user (textContent — never innerHTML)
 function addMessage(role, content) {
   const chatArea = document.getElementById('chatArea');
   const msg = document.createElement('div');
   msg.className = `message ${role}`;
-  msg.innerHTML = `
-    <div class="avatar">${role === 'bot' ? '🐝' : '👤'}</div>
-    <div class="bubble">${content}</div>
-  `;
+
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar';
+  avatar.textContent = role === 'bot' ? '🐝' : '👤';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+
+  if (role === 'bot') {
+    bubble.innerHTML = content; // trusted HTML from our backend
+  } else {
+    bubble.textContent = content; // FIX: user input — textContent prevents XSS
+  }
+
+  msg.appendChild(avatar);
+  msg.appendChild(bubble);
   chatArea.appendChild(msg);
   chatArea.scrollTop = chatArea.scrollHeight;
 }
@@ -266,70 +315,101 @@ function showTyping() {
 
 function hideTyping() {
   const t = document.getElementById('typing-indicator');
-  if(t) t.remove();
+  if (t) t.remove();
+}
+
+function setSendingState(sending) {
+  isSending = sending;
+  const btn = document.getElementById('sendBtn');
+  const input = document.getElementById('userInput');
+  btn.disabled = sending;
+  input.disabled = sending;
 }
 
 async function send(text = null) {
+  if (isSending) return;
+
   const input = document.getElementById('userInput');
   const question = text || input.value.trim();
-  if(!question) return;
-  
-  if(!text) input.value = '';
+  if (!question) return;
+
+  input.value = '';
   addMessage('user', question);
   showTyping();
-  
-  chatHistory.push({role: 'user', content: question});
-  
+  setSendingState(true);
+
+  // FIX: store plain text in history, not HTML
+  chatHistory.push({ role: 'user', content: question });
+  if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
+
   try {
-    const res = await fetch(`${API_URL}/agent`, {
+    const res = await fetchWithTimeout(`${API_URL}/agent`, {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        question: question,
+        question,
         model: currentModel,
         history: chatHistory.slice(-10)
       })
     });
-    
+
     hideTyping();
+
+    if (!res.ok) {
+      throw new Error(`Server error: ${res.status}`);
+    }
+
     const data = await res.json();
-    
-    chatHistory.push({role: 'assistant', content: data.answer});
-    if(chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
-    
+
+    // FIX: strip HTML before storing in history to avoid polluting LLM context
+    chatHistory.push({ role: 'assistant', content: stripHtml(data.answer) });
+    if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
+
     addMessage('bot', data.answer);
-    
-  } catch(e) {
+
+  } catch (e) {
     hideTyping();
-    addMessage('bot', `<div style="color:#dc2626">Error: ${e.message}</div>`);
+    // FIX: specific message for timeout (HF cold start)
+    if (e.name === 'AbortError') {
+      addMessage('bot',
+        'The server is waking up from sleep — this can take up to 30 seconds. ' +
+        'Please try your question again in a moment. ⏳'
+      );
+    } else {
+      addMessage('bot',
+        `<span style="color:#dc2626">Connection error: ${e.message}. Please try again.</span>`
+      );
+    }
+  } finally {
+    setSendingState(false);
   }
 }
 
-// ===== SEARCH & AI TOOLS FUNCTIONS (From your original index98.html) =====
+// ── Search ────────────────────────────────────────────────────────────────────
 
 function _makeBoolean(text) {
   const stopRE = /^(of|on|in|the|a|an|and|or|for|to|with|by|from|at|is|are|was|were|be|been|being|have|has|had|do|does|did|will|would|could|should|may|its|this|that|these|those|about|impact|effect|role|influence|importance|use|application|study|analysis|review|what|how|why|when|where|which)$/i;
   const words = text.split(/\s+/);
   const concepts = [];
   let phrase = [];
-  
-  for(const w of words) {
+
+  for (const w of words) {
     const clean = w.replace(/['"]/g, '');
-    if(!stopRE.test(clean) && clean.length > 2) {
+    if (!stopRE.test(clean) && clean.length > 2) {
       phrase.push(clean);
     } else {
-      if(phrase.length > 0) { concepts.push(phrase.join(' ')); phrase = []; }
+      if (phrase.length > 0) { concepts.push(phrase.join(' ')); phrase = []; }
     }
   }
-  if(phrase.length > 0) concepts.push(phrase.join(' '));
-  
-  if(concepts.length >= 2) return concepts.map(c => `"${c}"`).join(' AND ');
-  if(concepts.length === 1) return `"${concepts[0]}"`;
+  if (phrase.length > 0) concepts.push(phrase.join(' '));
+
+  if (concepts.length >= 2) return concepts.map(c => `"${c}"`).join(' AND ');
+  if (concepts.length === 1) return `"${concepts[0]}"`;
   return `"${text}"`;
 }
 
 function _sanitizeBooleanForPrimo(boolean) {
-  if(!boolean) return boolean;
+  if (!boolean) return boolean;
   boolean = boolean.replace(/'/g, '"');
   boolean = boolean.replace(/\(\s*(?:19|20)\d{2}\s*(?:OR\s*(?:19|20)\d{2}\s*)*\)/g, '');
   boolean = boolean.replace(/^\s*(AND|OR)\s*/i, '');
@@ -338,41 +418,17 @@ function _sanitizeBooleanForPrimo(boolean) {
   return boolean;
 }
 
-async function buildSearchPlan(query) {
+// FIX: removed dead fetch to non-existent /correct endpoint
+// Now uses local Boolean builder only (clean, no silent failures)
+function buildSearchPlan(query) {
   const raw = query.trim();
-  
-  // Try to use backend /correct endpoint if available, otherwise local
-  try {
-    const res = await fetch(`${API_URL}/correct`, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({query: raw, year: new Date().getFullYear()})
-    });
-    
-    if(res.ok) {
-      const data = await res.json();
-      return {
-        corrected: data.corrected || raw,
-        natural: data.natural || data.corrected || raw,
-        boolean: data.boolean || _makeBoolean(data.corrected || raw),
-        database_query: data.database_query || data.boolean || raw,
-        year_from: data.year_from || '',
-        year_to: data.year_to || '',
-        peer_reviewed: data.peer_reviewed || false,
-        open_access: data.open_access || false
-      };
-    }
-  } catch(e) {
-    console.log('Backend /correct not available, using local');
-  }
-  
-  // Local fallback
-  const fallbackBoolean = _makeBoolean(raw);
+  const boolean = _makeBoolean(raw);
   return {
     corrected: raw,
     natural: raw,
-    boolean: fallbackBoolean,
-    database_query: fallbackBoolean.replace(/[()"]/g,'').replace(/\b(AND|OR)\b/g,' ').trim(),
+    boolean: boolean,
+    // FIX: trim to 500 chars to match backend validator
+    database_query: boolean.replace(/[()"]/g, '').replace(/\b(AND|OR)\b/g, ' ').trim().substring(0, 500),
     year_from: '',
     year_to: '',
     peer_reviewed: false,
@@ -385,19 +441,26 @@ function encodeQuery(str) {
 }
 
 function buildSearchCard(bool, natural, corrected, raw, yf, yt, pr, oa) {
-  const yr = (yf||yt) ? `&multiFacets=facet_searchcreationdate,include,${yf||'0001'}|,|${yt||'9999'}` : '';
-  const facets = `${pr?'&qInclude=facet_tlevel,exact,peer_reviewed':''}${oa?'&qInclude=facet_tlevel,exact,open_access':''}${yr}`;
-  
+  const yr = (yf || yt)
+    ? `&multiFacets=facet_searchcreationdate,include,${yf || '0001'}|,|${yt || '9999'}`
+    : '';
+  const facets = `${pr ? '&qInclude=facet_tlevel,exact,peer_reviewed' : ''}${oa ? '&qInclude=facet_tlevel,exact,open_access' : ''}${yr}`;
+
   const boolClean = _sanitizeBooleanForPrimo(bool);
-  const simpleQ = boolClean.replace(/[()"]/g,'').replace(/\b(AND|OR)\b/g,' ').trim();
-  
+  const simpleQ = boolClean.replace(/[()"]/g, '').replace(/\b(AND|OR)\b/g, ' ').trim();
+
   const urlAll = `https://khalifa.primo.exlibrisgroup.com/discovery/search?query=any,contains,${encodeQuery(simpleQ)}&tab=Everything&search_scope=MyInst_and_CI&vid=971KUOSTAR_INST:KU&lang=en&mode=advanced&offset=0${facets}`;
   const urlArt = `https://khalifa.primo.exlibrisgroup.com/discovery/search?query=any,contains,${encodeQuery(simpleQ)}&tab=CentralIndex&search_scope=CentralIndex&vid=971KUOSTAR_INST:KU&lang=en&mode=advanced&offset=0${facets}&qInclude=facet_rtype,exact,articles`;
-  
+
+  // FIX: show correction notice without silently mutating the input box
+  const correctionHtml = corrected !== raw
+    ? `<div class="did-you-mean">✏️ <strong>Searched for:</strong> "${corrected}"</div>`
+    : '';
+
   return `
     <div class="scard">
-      <div class="scard-title">🔍 Search Strategy ${corrected !== raw ? '<span style="color:#d97706;font-size:.8rem">(Corrected)</span>' : ''}</div>
-      ${corrected !== raw ? `<div class="did-you-mean">✏️ <strong>Did you mean:</strong> "${corrected}" instead of "${raw}"?</div>` : ''}
+      <div class="scard-title">🔍 Search Strategy</div>
+      ${correctionHtml}
       <div style="font-size:.85rem;color:#6b7280;margin-bottom:8px"><strong>Natural query:</strong> ${natural}</div>
       <div class="bool-str">${bool}</div>
       <div class="slinks">
@@ -412,13 +475,11 @@ function buildAIToolsPanel(naturalQuery, primoKeyword) {
   const nq = encodeURIComponent(naturalQuery);
   const pk = encodeURIComponent(primoKeyword);
   const oaQ = naturalQuery.trim().replace(/\s+/g, '+');
-  
   const ebscoUrl = `https://khalifa.idm.oclc.org/login?url=http://search.ebscohost.com/login.aspx?authtype=ip,uid&profile=eds&direct=true&bquery=${nq}`;
-  
+
   return `
     <div class="ai-panel">
       <div class="ai-panel-title">✨ Also Try These AI Research Tools</div>
-      
       <div class="ai-row-label">🔐 KU Subscribed</div>
       <div class="ai-tools-strip" style="margin-bottom:14px">
         <a class="ai-tool-chip leapspace" href="https://www.sciencedirect.com/leapspace?query=${nq}" target="_blank">
@@ -434,7 +495,6 @@ function buildAIToolsPanel(naturalQuery, primoKeyword) {
           <span class="tc-icon">⭐</span>PRIMO AI
         </a>
       </div>
-      
       <div class="ai-row-label">🆓 Freemium</div>
       <div class="ai-tools-strip">
         <a class="ai-tool-chip consensus" href="https://consensus.app/results/?q=${nq}" target="_blank">
@@ -456,38 +516,32 @@ function buildAIToolsPanel(naturalQuery, primoKeyword) {
 
 async function doSearch() {
   const query = document.getElementById('searchInput').value.trim();
-  if(!query) return;
-  
+  if (!query) return;
+
   const pr = document.getElementById('peerReviewed').checked;
   const oa = document.getElementById('openAccess').checked;
-  const yf = document.getElementById('yearFrom').value;
-  const yt = document.getElementById('yearTo').value;
-  
+  const yf = document.getElementById('yearFrom').value.trim();
+  const yt = document.getElementById('yearTo').value.trim();
+
   const statusDiv = document.getElementById('searchStatus');
   const resultsDiv = document.getElementById('searchResults');
-  
-  statusDiv.innerHTML = '<span style="color:#d97706">✏️ Correcting spelling & building Boolean query...</span>';
+  const searchBtn = document.getElementById('searchBtn');
+
+  searchBtn.disabled = true;
+  statusDiv.innerHTML = '<span style="color:#d97706">✏️ Building Boolean query...</span>';
   resultsDiv.innerHTML = '';
-  
+
   try {
-    // Build search plan
-    const plan = await buildSearchPlan(query);
+    const plan = buildSearchPlan(query);
     lastSearchPlan = plan;
-    
-    // Update UI with search strategy
-    const wasCorrected = plan.corrected.toLowerCase().trim() !== query.toLowerCase().trim();
-    if(wasCorrected) {
-      document.getElementById('searchInput').value = plan.corrected;
-    }
-    
-    statusDiv.innerHTML = `<span style="color:#16a34a">🔍 Searching PRIMO...</span>`;
-    
-    // Execute PRIMO search
-    const searchRes = await fetch(`${API_URL}/search`, {
+
+    statusDiv.innerHTML = '<span style="color:#16a34a">🔍 Searching PRIMO...</span>';
+
+    const searchRes = await fetchWithTimeout(`${API_URL}/search`, {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        query: plan.database_query || plan.boolean,
+        query: plan.database_query,
         source: 'primo',
         limit: 10,
         peer_reviewed: pr,
@@ -496,73 +550,81 @@ async function doSearch() {
         year_to: yt || plan.year_to
       })
     });
-    
+
+    if (!searchRes.ok) throw new Error(`Server error: ${searchRes.status}`);
     const data = await searchRes.json();
-    
-    // Build results HTML
+
     let html = '';
-    
-    // Search strategy card
-    html += buildSearchCard(
-      plan.boolean, 
-      plan.natural, 
-      plan.corrected, 
-      query, 
-      yf||plan.year_from, 
-      yt||plan.year_to, 
-      pr, 
-      oa
+    html += buildSearchCard(plan.boolean, plan.natural, plan.corrected, query, yf, yt, pr, oa);
+    html += buildAIToolsPanel(
+      plan.natural,
+      plan.boolean.replace(/[()"]/g, '').replace(/\b(AND|OR)\b/g, ' ').trim()
     );
-    
-    // AI Tools panel
-    html += buildAIToolsPanel(plan.natural, plan.boolean.replace(/[()"]/g,'').replace(/\b(AND|OR)\b/g,' ').trim());
-    
-    // Results
-    if(data.results && data.results.length > 0) {
-      html += `<div style="margin:16px 0 8px;font-weight:700;color:var(--ku-blue);font-size:1rem">📄 ${data.total || 'Many'} results found — showing top ${data.results.length}:</div>`;
-      
-      data.results.forEach((r, i) => {
+
+    if (data.results && data.results.length > 0) {
+      html += `<div style="margin:16px 0 8px;font-weight:700;color:var(--ku-blue);font-size:1rem">
+        📄 ${data.total || 'Many'} results found — showing top ${data.results.length}:
+      </div>`;
+
+      data.results.forEach(r => {
+        const safeTitle = r.title
+          ? r.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          : 'Untitled';
+        const primoUrl = r.primo_url || '#';
         html += `
           <div class="rcard">
-            <div class="rcard-title"><a href="${r.primo_url || '#'}" target="_blank">${r.title}</a></div>
-            <div class="rcard-meta">${r.creator || 'Unknown author'} • ${r.date || ''} • ${r.type || 'Unknown type'}</div>
+            <div class="rcard-title">
+              <a href="${primoUrl}" target="_blank">${safeTitle}</a>
+            </div>
+            <div class="rcard-meta">${r.creator || 'Unknown author'} • ${r.date || ''} • ${r.type || ''}</div>
             ${r.source ? `<div class="rcard-meta">${r.source}</div>` : ''}
             <div class="rcard-actions">
-              <button class="rcard-btn" onclick="window.open('${r.primo_url || '#'}', '_blank')">View in PRIMO →</button>
+              <button class="rcard-btn" onclick="window.open('${primoUrl}', '_blank')">
+                View in PRIMO →
+              </button>
             </div>
           </div>
         `;
       });
-      
-      // View all link
+
       const boolClean = _sanitizeBooleanForPrimo(plan.boolean);
-      const simpleQ = boolClean.replace(/[()"]/g,'').replace(/\b(AND|OR)\b/g,' ').trim();
-      const facets = `${pr?'&qInclude=facet_tlevel,exact,peer_reviewed':''}${oa?'&qInclude=facet_tlevel,exact,open_access':''}`;
+      const simpleQ = boolClean.replace(/[()"]/g, '').replace(/\b(AND|OR)\b/g, ' ').trim();
+      const facets = `${pr ? '&qInclude=facet_tlevel,exact,peer_reviewed' : ''}${oa ? '&qInclude=facet_tlevel,exact,open_access' : ''}`;
       const viewAllUrl = `https://khalifa.primo.exlibrisgroup.com/discovery/search?query=any,contains,${encodeQuery(simpleQ)}&tab=Everything&search_scope=MyInst_and_CI&vid=971KUOSTAR_INST:KU&lang=en&mode=advanced&offset=0${facets}`;
-      
+
       html += `
         <div style="text-align:center;margin-top:16px">
-          <a href="${viewAllUrl}" target="_blank" style="display:inline-block;padding:10px 20px;background:var(--ku-blue);color:#fff;text-decoration:none;border-radius:8px;font-weight:600">
+          <a href="${viewAllUrl}" target="_blank"
+            style="display:inline-block;padding:10px 20px;background:var(--ku-blue);color:#fff;text-decoration:none;border-radius:8px;font-weight:600">
             View all results in PRIMO →
           </a>
         </div>
       `;
+    } else if (data.error) {
+      html += `<div class="error-banner">⚠️ ${data.error}</div>`;
     } else {
-      html += `<div style="padding:20px;background:#fef2f2;border:1px solid #fee2e2;border-radius:8px;color:#991b1b;margin-top:12px">No results found. Try broadening your search terms.</div>`;
+      html += `<div class="error-banner">No results found. Try broadening your search terms.</div>`;
     }
-    
+
     statusDiv.innerHTML = '';
     resultsDiv.innerHTML = html;
-    
-  } catch(e) {
+
+  } catch (e) {
     statusDiv.innerHTML = '';
-    resultsDiv.innerHTML = `<div class="error-banner">Search failed: ${e.message}</div>`;
+    const msg = e.name === 'AbortError'
+      ? '⏳ Request timed out — the server may be waking up. Please try again.'
+      : `Search failed: ${e.message}`;
+    resultsDiv.innerHTML = `<div class="error-banner">${msg}</div>`;
+  } finally {
+    searchBtn.disabled = false;
   }
 }
 
-// Initialize
+// ── Init ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   console.log('LibBee loaded — API:', API_URL);
+  // Set initial model button state
+  setModel('gpt');
 });
 </script>
 </body>
